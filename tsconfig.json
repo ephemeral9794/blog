@@ -27,7 +27,11 @@
 			"@types/node",
 			"@nuxt/types",
 			"vuetify",
-			"./types/vue-shim"
+			"@nuxtjs/axios",
+			"@types/marked",
+			"@types/highlight.js",
+			"./types/vue-shim",
+			"./types/microcms"
 		]
 	},
 	"exclude": [
