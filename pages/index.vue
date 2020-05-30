@@ -1,43 +1,45 @@
 <template>
-	<v-app>
-		<v-card>
-			<v-list>
-				<v-list-group>
-					<v-list-item
-						v-for="(content, index) in contents"
-						:key="index"
-					>
-						<nuxt-link
-							:to="{
-								name: 'posts-id',
-								params: { id: content.id }
-							}"
-						>
-							{{ content.title }}
-						</nuxt-link>
-					</v-list-item>
-				</v-list-group>
-			</v-list>
-		</v-card>
-	</v-app>
+  <v-container>
+    <v-row v-for="content in contents" :key="content">
+      <v-card min-width="500" class="my-3">
+        <v-card-title>
+          {{ content.title }}
+        </v-card-title>
+      </v-card>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'nuxt-property-decorator'
-import { Context } from '@nuxt/types'
-import {} from '@nuxtjs/axios'
-import { MicroCMS, Content } from '@/types/microcms'
+import { defineComponent, ref, watchEffect } from '@vue/composition-api'
 
-@Component
-export default class extends Vue {
-	async asyncData(context: Context) {
-		const { $axios } = context
-		const contents: Content[] = await $axios
-			.$get('https://ephemeral9794.microcms.io/api/v1/blog')
-			.then((microcms: MicroCMS) => {
-				return microcms.contents
-			})
-		return { contents }
-	}
+type Content = {
+  id: string
+  createdAt: Date
+  updatedAt: Date
+  title: string
+  content: string
 }
+type MicroCMSResult = {
+  contents: Content[]
+  totalCount: number
+  offset: number
+  limit: number
+}
+
+export default defineComponent({
+  layout: 'main',
+  setup(_props, context) {
+    const contents = ref<Content[]>()
+
+    watchEffect(async () => {
+      const result: MicroCMSResult = await context.root.$axios.$get('/blog')
+      contents.value = result.contents
+    })
+
+    return {
+      contents
+    }
+  }
+})
 </script>

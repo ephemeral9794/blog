@@ -1,10 +1,10 @@
 # blog
 
-> my blog contents
+> my blog
 
 ## Build Setup
 
-``` bash
+```bash
 # install dependencies
 $ yarn install
 
