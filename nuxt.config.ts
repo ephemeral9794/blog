@@ -33,7 +33,7 @@ const config: Configuration = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['@/plugins/composition-api'],
+  plugins: ['@/plugins/composition-api', '@/plugins/moment'],
   /*
    ** Nuxt.js dev-modules
    */
@@ -45,7 +45,8 @@ const config: Configuration = {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     // Doc: https://github.com/nuxt-community/dotenv-module
-    '@nuxtjs/dotenv'
+    '@nuxtjs/dotenv',
+    ['@nuxtjs/moment', ['ja']]
   ],
   /*
    ** Axios module configuration

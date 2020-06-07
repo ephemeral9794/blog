@@ -1,33 +1,68 @@
 <template>
   <v-app light>
-    <v-content class="mx-auto">
+    <v-app-bar app>
+      <!--<span><img src="./assets/favicon.png" alt=""/></span>-->
+      <v-toolbar-title>
+        はかなや's Homepage
+      </v-toolbar-title>
+    </v-app-bar>
+    <v-content>
       <v-container>
-        <v-card outlined max-width="240">
-          <v-card-title class="mx-auto">
-            はかなや's Homepage
-          </v-card-title>
-        </v-card>
-        <v-layout row wrap>
-          <v-flex>
+        <v-layout wrap row>
+          <v-flex xs9>
             <nuxt />
           </v-flex>
-          <!--<v-flex>
-				<v-card class="ml-auto" max-width="300">
-					<v-card-title>
-						詳細
-					</v-card-title>
-				</v-card>
-			</v-flex>-->
+          <v-flex xs3>
+            <v-card outlined>
+              <v-list>
+                <v-subheader>
+                  目次
+                </v-subheader>
+                <v-list-item-group>
+                  <v-list-item
+                    v-for="(content, i) in contents"
+                    :key="i"
+                    :to="`/${content.id}`"
+                    nuxt
+                  >
+                    <v-list-item-title>{{ content.title }}</v-list-item-title>
+                  </v-list-item>
+                </v-list-item-group>
+              </v-list>
+            </v-card>
+          </v-flex>
         </v-layout>
+        <v-footer absolute>
+          <v-col class="text-center" cols="12">
+            (c){{ new Date().getFullYear() }} —
+            <strong
+              ><a href="https://github.com/ephemeral9794/">
+                ephemeral9794
+              </a>
+            </strong>
+          </v-col>
+        </v-footer>
       </v-container>
     </v-content>
   </v-app>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, ref, watchEffect } from '@vue/composition-api'
+import { Content, MicroCMSResult } from '@/types/microcms'
 
 export default defineComponent({
-  setup() {}
+  setup(_props, context) {
+    const contents = ref<Content[]>()
+
+    watchEffect(async () => {
+      const result: MicroCMSResult = await context.root.$axios.$get('/blog')
+      contents.value = result.contents
+    })
+
+    return {
+      contents
+    }
+  }
 })
 </script>
