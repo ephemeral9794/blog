@@ -1,9 +1,11 @@
 <template>
   <v-app light>
-    <v-app-bar app>
+    <v-app-bar app color="primary">
       <!--<span><img src="./assets/favicon.png" alt=""/></span>-->
       <v-toolbar-title>
-        はかなや's Homepage
+        <nuxt-link to="/" class="heading-5 link-black">
+          はかなや's Homepage
+        </nuxt-link>
       </v-toolbar-title>
     </v-app-bar>
     <v-content>
@@ -66,3 +68,11 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="scss">
+$black: rgb(255, 255, 255);
+a.link-black {
+  color: $black !important;
+  text-decoration: none;
+}
+</style>

@@ -1,10 +1,12 @@
 import colors from 'vuetify/es5/util/colors'
 import { Configuration } from '@nuxt/types'
 import { NuxtAxiosInstance } from '@nuxtjs/axios'
+import axios from 'axios'
+import { Content } from './types/microcms'
 require('dotenv').config()
 
 const config: Configuration = {
-  mode: 'universal',
+  mode: 'spa',
   /*
    ** Headers of the page
    */
@@ -20,7 +22,7 @@ const config: Configuration = {
         content: process.env.npm_package_description || ''
       }
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+    link: [{ rel: 'icon', type: 'image/x-icon', href: './favicon.ico' }]
   },
   /*
    ** Customize the progress-bar color
@@ -48,6 +50,30 @@ const config: Configuration = {
     '@nuxtjs/dotenv',
     ['@nuxtjs/moment', ['ja']]
   ],
+  /*
+   ** Nuxt.js generate
+   */
+  generate: {
+    routes() {
+      return axios
+        .get('https://ephemeral9794.microcms.io/api/v1/blog', {
+          headers: {
+            'X-API-KEY': process.env.API_KEY
+          }
+        })
+        .then((res) => {
+          return res.data.contents.map((content: Content) => {
+            return {
+              route: content.id,
+              payload: content
+            }
+          })
+        })
+    }
+  },
+  router: {
+    base: '/blog/'
+  },
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
